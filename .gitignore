@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environment
+venv/
+.venv/
+
+# Playwright default output (this project uses evidence/ instead)
+test-results/
+
+# macOS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
