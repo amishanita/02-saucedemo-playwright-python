@@ -2,7 +2,7 @@
 
 UI test automation for SauceDemo, written in Python with Playwright and pytest.
 
-**Status: not run yet / まだ実行していません.** The code is finished but I have not executed the suite. Results and any bugs will go in this README after I run it.
+**Status: run on 2026-09-03. 30 passed, 1 skipped (Chromium).** Details in the Results section below.
 
 ---
 
@@ -100,13 +100,13 @@ For the sort dropdown I used `get_by_role("combobox")` since there is only one s
 
 For product cards I used `.filter(has_text="Sauce Labs Backpack")` to narrow down to one card first. Without that, clicking "Add to cart" would hit whichever button Playwright found first, which is not necessarily the product I wanted.
 
-## Things I want to check when I run it
+## Things I was unsure about, and how they turned out
 
-Three things I am not sure about, and I will update this section with what actually happens:
+I had three question marks before the first real run:
 
-1. TC-LOGIN-007. I expect an error when you open `/inventory.html` without logging in, but I have not confirmed the exact behaviour.
-2. The cart page might use a different `data-test` value than the inventory page for its item rows.
-3. The exact wording of the error messages. I used partial matching so small differences do not break the tests, but I still need to see the real text.
+1. TC-LOGIN-007. Opening `/inventory.html` without logging in. It does get blocked with an error, so the test passed.
+2. Whether the cart page uses the same item locator as the inventory page. It does.
+3. The exact error message wording. Partial matching held up, so I did not have to change anything.
 
 ## What I learned building it
 
@@ -130,22 +130,39 @@ Test data is fixed. Same product, same form values every run.
 
 ## Results
 
-Not run yet / 未実施
+Run on 2026-09-03, Chromium, on macOS.
+
+| Result | Count |
+|---|---|
+| Passed | 30 |
+| Skipped | 1 |
+| Failed | 0 |
+| Total | 31 |
+
+Run time was about 32 seconds.
+
+The one skipped test is `test_login_008_problem_user_visual_issues`. I skipped it on purpose. `problem_user` shows broken product images, and checking images properly needs visual comparison, which I decided was out of scope for this project. The skip reason is written in the test so it shows up in the report instead of being silently ignored.
+
+Everything else passed on the first real run. Two things I had been unsure about turned out fine: opening `/inventory.html` without logging in does get blocked (TC-LOGIN-007), and the cart page uses the same `data-test` item locator as the inventory page.
+
+The HTML report is at `reports/report.html` after a run.
 
 ## Bugs
 
-None recorded yet. Anything I find will go in `docs/bugs.md`.
+No defects were found in the automated scope. I tested with `standard_user`, which is the clean account, so this is the expected result. See `docs/bugs.md` for the short write-up.
+
+I did not test the deliberately broken accounts (`problem_user`, `error_user`) beyond the one skipped test. Those would be a separate piece of work.
 
 ## Environment
 
 | Item | Value |
 |---|---|
 | OS | macOS |
-| Python | Not recorded yet |
-| Playwright | Not recorded yet |
-| pytest | Not recorded yet |
+| Python | 3.14.7 |
+| Playwright | 1.62.0 |
+| pytest | 9.1.1 |
 | Browser | Chromium |
-| Run date | Not run yet |
+| Run date | 2026-09-03 |
 
 ## Structure
 
@@ -181,14 +198,13 @@ None recorded yet. Anything I find will go in `docs/bugs.md`.
 
 ## Next
 
-- Run the suite and record the real results here
 - Add GitHub Actions so it runs automatically
 - Try `problem_user`, which is a version of the site with deliberate bugs
 - Move the base URL out into an environment variable
 
 ## Author
 
-Tmg
+Tamang Amish
 
 ---
 
@@ -286,13 +302,13 @@ Page Object Model を使っています。ロケーターは `pages/` に、確�
 
 商品カードは `.filter(has_text="Sauce Labs Backpack")` で先に1件に絞っています。これをしないと「Add to cart」ボタンが複数あるので、意図しない商品を押してしまいます。
 
-## 実行時に確認したいこと
+## 実行前に不安だった点と、その結果
 
-自信がない箇所が3つあります。実行後にここを更新します。
+最初の実行前に自信がない箇所が3つありました。
 
-1. TC-LOGIN-007。未ログインで `/inventory.html` を開くとエラーになるはずですが、実際の挙動は未確認です。
-2. カート画面の行が、商品一覧と同じ `data-test` の値かどうか。
-3. エラーメッセージの正確な文言。部分一致で書いているので多少の差なら壊れませんが、実際の文言は確認が必要です。
+1. TC-LOGIN-007。未ログインで `/inventory.html` を開いたとき。ブロックされてエラーが出たので、テストは成功しました。
+2. カート画面が商品一覧と同じロケーターかどうか。同じでした。
+3. エラーメッセージの正確な文言。部分一致で書いていたので、修正は不要でした。
 
 ## 作っていて分かったこと
 
@@ -316,33 +332,49 @@ Sauce Labs 側でサイトが変わればロケーターの修正が必要にな
 
 ## 結果
 
-未実施
+2026年9月3日に Chromium で実行しました。
+
+| 結果 | 件数 |
+|---|---|
+| 成功 | 30 |
+| スキップ | 1 |
+| 失敗 | 0 |
+| 合計 | 31 |
+
+実行時間は約32秒でした。
+
+スキップした1件は `test_login_008_problem_user_visual_issues` です。これは意図的にスキップしています。`problem_user` は商品画像が壊れており、画像を正しく確認するには画像比較が必要で、今回は対象外にしたためです。スキップの理由はテスト内に書いてあるので、レポートにも表示されます。
+
+それ以外は最初の実行で全て成功しました。不安だった2点も問題ありませんでした。未ログインで `/inventory.html` を開くとブロックされること(TC-LOGIN-007)、カート画面が商品一覧と同じ `data-test` を使っていることです。
+
+実行後、HTMLレポートは `reports/report.html` に出力されます。
 
 ## 不具合
 
-まだ記録はありません。見つかったものは `docs/bugs.md` に書きます。
+自動化の対象範囲では不具合は見つかりませんでした。`standard_user` はクリーンなアカウントなので、この結果は想定通りです。詳細は `docs/bugs.md` に書いています。
+
+意図的に壊されているアカウント(`problem_user`、`error_user`)は、スキップした1件以外はテストしていません。これは別の作業として扱うべき内容です。
 
 ## 環境
 
 | 項目 | 内容 |
 |---|---|
 | OS | macOS |
-| Python | 未記録 |
-| Playwright | 未記録 |
-| pytest | 未記録 |
+| Python | 3.14.7 |
+| Playwright | 1.62.0 |
+| pytest | 9.1.1 |
 | ブラウザ | Chromium |
-| 実行日 | 未実施 |
+| 実行日 | 2026-09-03 |
 
 ## 今後
 
-- 実行して結果をここに記載する
 - GitHub Actions で自動実行できるようにする
 - 意図的に不具合が入っている `problem_user` を試す
 - ベースURLを環境変数に切り出す
 
 ## 作成者
 
-Tmg
+Tamang Amish
 
 ---
 
